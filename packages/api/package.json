@@ -1,0 +1,21 @@
+{
+  "name": "@flik/api",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon src/app.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@feathersjs/express": "^4.5.9",
+    "@feathersjs/feathers": "^4.5.9",
+    "@feathersjs/socketio": "^4.5.9",
+    "nanoid": "^3.1.15"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.6"
+  }
+}

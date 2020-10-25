@@ -1,0 +1,61 @@
+version: '3'
+services:
+  lb:
+    image: traefik:v2.1
+    command: --api.insecure=true --providers.docker
+    ports:
+      # The HTTP port
+      - "80:80"
+      # The Web UI (enabled by --api.insecure=true)
+      - "8080:8080"
+    volumes:
+      # So that Traefik can listen to the Docker events
+      - /var/run/docker.sock:/var/run/docker.sock
+  front:
+    build: packages/front
+    labels:
+      - "traefik.http.routers.front.rule=PathPrefix(`/`)"
+    environment:
+      - "NODE_ENV=development"
+    expose:
+      - 5000
+    volumes:
+      - ./packages/front:/opt/node_app/app:delegated
+      - ./packages/front/package.json:/opt/node_app/package.json
+      - ./packages/front/package-lock.json:/opt/node_app/package-lock.json
+      - notused:/opt/node_app/app/node_modules
+    command: npm run dev
+  api:
+    build: packages/api
+    labels:
+      - "traefik.http.routers.api.rule=PathPrefix(`/api/`)"
+    environment:
+      - "NODE_ENV=development"
+    expose:
+      - 3000
+    volumes:
+      - ./packages/api:/opt/node_app/app:delegated
+      - ./packages/api/package.json:/opt/node_app/package.json
+      - ./packages/api/package-lock.json:/opt/node_app/package-lock.json
+      - notused:/opt/node_app/app/node_modules
+    command: npm run dev
+  worker:
+    build: packages/worker
+    environment:
+      - "NODE_ENV=development"
+    expose:
+      - 3000
+    volumes:
+      - ./packages/api:/opt/node_app/app:delegated
+      - ./packages/api/package.json:/opt/node_app/package.json
+      - ./packages/api/package-lock.json:/opt/node_app/package-lock.json
+      - notused:/opt/node_app/app/node_modules
+    command: npm run dev
+  redis:
+    image: redis:6
+    ports:
+     - "6379:6379"
+    command: redis-server
+
+volumes:
+  notused:
