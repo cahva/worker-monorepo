@@ -7,7 +7,7 @@
 </script>
 
 <button on:click={increment}>
-	Clickety click: {count}
+	Click: {count}
 </button>
 
 <style>
