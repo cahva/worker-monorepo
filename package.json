@@ -5,6 +5,7 @@
     "lerna": "^3.22.1"
   },
   "scripts": {
-    "dev": "lerna run dev"
+    "dev": "lerna run dev",
+    "new-version": "lerna version --conventional-commits --yes"
   }
 }
